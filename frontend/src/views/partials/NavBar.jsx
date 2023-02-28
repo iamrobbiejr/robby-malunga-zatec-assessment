@@ -12,7 +12,7 @@ function NavBar(props) {
                             className="navbar navbar-expand-lg blur border-radius-xl top-0 z-index-fixed shadow position-absolute my-3 py-2 start-0 end-0 mx-4">
                             <div className="container-fluid px-0">
                                 <a className="navbar-brand font-weight-bolder ms-sm-3"
-                                   href="https://demos.creative-tim.com/material-kit/index" rel="tooltip"
+                                   href={'/'} rel="tooltip"
                                    title="Go to Homepage" data-placement="bottom" target="_blank">
                                     Zatec Assessment
                                 </a>
@@ -29,9 +29,13 @@ function NavBar(props) {
                                     <ul className="navbar-nav navbar-nav-hover ms-auto">
 
                                         <li className="nav-item my-auto ms-3 ms-lg-0">
-                                            <a href="https://www.creative-tim.com/product/material-kit-pro"
-                                               className="btn btn-sm  bg-gradient-primary  mb-0 me-1 mt-2 mt-md-0">Upgrade
-                                                to Pro</a>
+                                            <a href={'/login'}
+                                               className="btn btn-sm  bg-gradient-dark  mb-0 me-1 mt-2 mt-md-0">Sign
+                                                In</a>
+                                        </li>
+                                        <li className="nav-item my-auto ms-3 ms-lg-0">
+                                            <a href={'/register'}
+                                               className="btn btn-sm  bg-gradient-dark  mb-0 me-1 mt-2 mt-md-0">Register</a>
                                         </li>
                                         <li className="nav-item dropdown dropdown-hover mx-2 my-auto ms-3 ms-lg-0">
                                             <a className="btn btn-sm  bg-gradient-primary ps-2 d-flex cursor-pointer align-items-center mb-0 me-1 mt-2 mt-md-0"
@@ -40,7 +44,7 @@ function NavBar(props) {
                                                     account_circle</i>
                                                 Account
                                                 <img src="/img/down-arrow-white.svg" alt="down-arrow"
-                                                     className="arrow ms-auto ms-md-2" />
+                                                     className="arrow ms-auto ms-md-2"/>
                                             </a>
                                             <ul className="dropdown-menu dropdown-menu-end dropdown-menu-animation dropdown-md dropdown-md-responsive mt-0 mt-lg-3 p-3 border-radius-lg"
                                                 aria-labelledby="dropdownMenuDocs">
