@@ -28,14 +28,18 @@ function NavBar(props) {
                                 <div className="collapse navbar-collapse pt-3 pb-2 py-lg-0 w-100" id="navigation">
                                     <ul className="navbar-nav navbar-nav-hover ms-auto">
 
-
+                                        <li className="nav-item my-auto ms-3 ms-lg-0">
+                                            <a href="https://www.creative-tim.com/product/material-kit-pro"
+                                               className="btn btn-sm  bg-gradient-primary  mb-0 me-1 mt-2 mt-md-0">Upgrade
+                                                to Pro</a>
+                                        </li>
                                         <li className="nav-item dropdown dropdown-hover mx-2 my-auto ms-3 ms-lg-0">
                                             <a className="btn btn-sm  bg-gradient-primary ps-2 d-flex cursor-pointer align-items-center mb-0 me-1 mt-2 mt-md-0"
                                                id="dropdownMenuDocs" data-bs-toggle="dropdown" aria-expanded="false">
                                                 <i className="material-icons opacity-6 me-2 text-md">
                                                     account_circle</i>
                                                 Account
-                                                <img src="../../../public/img/down-arrow-white.svg" alt="down-arrow"
+                                                <img src="/img/down-arrow-white.svg" alt="down-arrow"
                                                      className="arrow ms-auto ms-md-2" />
                                             </a>
                                             <ul className="dropdown-menu dropdown-menu-end dropdown-menu-animation dropdown-md dropdown-md-responsive mt-0 mt-lg-3 p-3 border-radius-lg"
