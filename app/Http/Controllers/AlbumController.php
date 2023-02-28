@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Album;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 
 class AlbumController extends Controller
 {
@@ -12,7 +16,32 @@ class AlbumController extends Controller
      */
     public function index()
     {
-        //
+        // retrieve all albums
+        $albums = Album::all();
+
+        return response([
+            'message' => 'All albums available',
+            'data' => $albums
+        ]);
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function dashboardIndex()
+    {
+//        get authorized user
+        $user = Auth::user();
+
+        // retrieve all albums owned by user
+        $albums = Album::where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response([
+            'message' => 'All albums available',
+            'data' => $albums
+        ]);
     }
 
     /**
