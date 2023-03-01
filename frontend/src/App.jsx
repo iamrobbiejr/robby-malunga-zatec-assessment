@@ -5,15 +5,30 @@
 import React, {useState} from 'react'
 import reactLogo from './assets/react.svg'
 // import './App.css'
-import NavBar from "./views/partials/NavBar.jsx";
-import AlbumHomeView from "./views/partials/AlbumHomeView.jsx";
-import SongsHomeView from "./views/partials/SongsHomeView.jsx";
-import GenreHomeView from "./views/partials/GenreHomeView.jsx";
+import NavBar from "./views/includes/NavBar.jsx";
+import AlbumHomeView from "./views/components/AlbumHomeView.jsx";
+import SongsHomeView from "./views/components/SongsHomeView.jsx";
+import GenreHomeView from "./views/components/GenreHomeView.jsx";
 
 function App() {
 
     //   initialize variables
-    const [albums, setAlbums] = useState([]);
+    const [albums, setAlbums] = useState([
+        {
+            'id': 1,
+            'title': 'Album 1',
+            'description': 'lorem ipsum dolor sit amet, consectetur adip',
+            'cover_image_url': 'https://img.freepik.com/free-vector/realistic-music-record-label-disk-mockup_1017-33906.jpg?size=626&ext=jpg&uid=R6398802&ga=GA1.2.2073599072.1677000356&semt=ais',
+            'release_date': '10-01-1998',
+        },
+        {
+            'id': 1,
+            'title': 'Album 2',
+            'description': 'lorem ipsum dolor sit amet, consectetur adip',
+            'cover_image_url': 'https://img.freepik.com/free-vector/vinyl-record-cover-design_1284-70516.jpg?w=996&t=st=1677674521~exp=1677675121~hmac=1485f64d9dfbd424385189cfb4434a39973bd46e88cfd9ec8739d21ab3998bf9',
+            'release_date': '10-01-1998',
+        }
+    ]);
     const [genres, SetGenres] = useState([]); //list of most popular genres
     const [songs, setSongs] = useState([]);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -25,15 +40,13 @@ function App() {
             {/*   end navbar component */}
             {/*    header section*/}
             <header className="header-2">
-                <div className="page-header min-vh-45 relative"
+                <div className="page-header min-vh-35 relative"
                      style={{backgroundImage: "url(" + '/img/bg2.jpg' + ")"}}>
                     <span className="mask bg-gradient-secondary opacity-4"></span>
                     <div className="container">
                         <div className="row">
                             <div className="col-lg-7 text-center mx-auto">
                                 <h1 className="text-white pt-3 mt-n5">Music Platform</h1>
-                                <p className="lead text-white mt-3">Free & Open Source Web UI Kit built over Bootstrap
-                                    5. <br/> Join over 1.6 million developers around the world. </p>
                             </div>
                         </div>
                     </div>
@@ -82,7 +95,7 @@ function App() {
                                             <h2 className=" p-3 mt-2">Albums</h2>
                                         </div>
                                         {/*    albums section */}
-                                        <AlbumHomeView/>
+                                        <AlbumHomeView albums={albums}/>
                                         {/*   end albums section */}
                                     </>
                                 </div>
