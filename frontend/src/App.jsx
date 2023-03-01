@@ -31,7 +31,6 @@ function App() {
     ]);
     const [genres, SetGenres] = useState([]); //list of most popular genres
     const [songs, setSongs] = useState([]);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     return (
         <>

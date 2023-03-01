@@ -8,16 +8,12 @@ import NavBar from "./includes/NavBar.jsx";
 import ViewAlbumDashboardPane from "./components/partials/ViewAlbumDashboardPane.jsx";
 import UpdateAlbumDashboardPane from "./components/partials/UpdateAlbumDashboardPane.jsx";
 
-const Dashboard = (props) => {
+const Dashboard = () => {
 
     // initialize global variables
     const [detailsPane, setDetailsPane] = useState({visible: false, data: {}})
     const [updateDetailsPane, setUpdateDetailsPane] = useState({visible: false, data: {}})
-    const [albums, setAlbums] = useState([
-        {
-            'title': 'Sample'
-        }
-    ]);
+    const [albums, setAlbums] = useState([]);
     const [request, setRequest] = useState({});
     const handleOnPaneClose = () => {
         setDetailsPane({visible: false, data: {}})
