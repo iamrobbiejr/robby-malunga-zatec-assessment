@@ -13,7 +13,11 @@ const Dashboard = (props) => {
     // initialize global variables
     const [detailsPane, setDetailsPane] = useState({visible: false, data: {}})
     const [updateDetailsPane, setUpdateDetailsPane] = useState({visible: false, data: {}})
-    const [albums, setAlbums] = useState([]);
+    const [albums, setAlbums] = useState([
+        {
+            'title': 'Sample'
+        }
+    ]);
     const [request, setRequest] = useState({});
     const handleOnPaneClose = () => {
         setDetailsPane({visible: false, data: {}})
@@ -127,7 +131,8 @@ const Dashboard = (props) => {
                                                     className="material-icons text-lg me-2">edit</i> Edit</span>
                                             </button>
                                             &nbsp;&nbsp;
-                                            <button className="btn btn-sm btn-danger"
+                                            <button onClick={() => handleDeleteAlbum(item)}
+                                                    className="btn btn-sm btn-danger"
                                                     data-toggle="tooltip" data-original-title="Delete Album">
                                                 <span className="btn-inner--text"><i
                                                     className="material-icons text-lg me-2">delete</i>Delete</span>
