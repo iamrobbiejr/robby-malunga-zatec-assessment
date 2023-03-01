@@ -22,7 +22,7 @@ class AuthController extends Controller
 
         $token = $user->createToken('main')->plainTextToken;
 
-        return response([
+        return response()->json([
             'message' => 'User created successfully',
             'user' => $user,
             'token' => $token
