@@ -1,7 +1,17 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 
 function AlbumHomeView(props) {
-    // retrieve all albums
+
+    // initialize variables
+    const [albums, setAlbums] = useState([]);
+    const [album, setAlbum] = useState({});
+
+
+    useEffect(() => {
+
+        // retrieve all albums
+
+    }, [])
 
     return (
         <>
@@ -30,6 +40,8 @@ function AlbumHomeView(props) {
                     </div>
                 </div>
             </div>
+            {/*    add sliding pane to view clicked album details */}
+
         </>
     );
 }
