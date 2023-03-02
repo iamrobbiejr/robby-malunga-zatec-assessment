@@ -32,10 +32,8 @@ class AlbumController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function dashboardIndex(Request $request)
+    public function dashboardIndex(User $user)
     {
-//        get authorized user
-        $user = $request->user();
 
         // retrieve all albums owned by user
         $albums = Album::where('user_id', $user->id)
@@ -59,7 +57,8 @@ class AlbumController extends Controller
         try {
             $imageName = Str::random() . '.' . $request->cover_image_url->getClientOriginalExtension();
             Storage::disk('public')->putFileAs('albums/image', $request->cover_image_url, $imageName);
-            Album::create($request->post() + ['cover_image_url' => $imageName]);
+            $data['cover_image_url'] = $imageName;
+            Album::create($data);
 
             return response()->json([
                 'message' => 'Album Created Successfully!!'

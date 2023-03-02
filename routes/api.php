@@ -26,5 +26,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::apiResource('album', AlbumController::class);
     Route::apiResource('song', SongController::class);
+    Route::get('/song/{album}', [SongController::class, 'albumSongs']);
+    Route::get('/albums/{user}', [AlbumController::class, 'dashboardIndex']);
 });
 
