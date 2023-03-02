@@ -17,7 +17,7 @@ function GenreHomeView(props) {
             {/* end pane */}
             <div className="row">
                 {genres.map((item, i) => (
-                    <div className=" col-lg-3 col-md-6 col-sm-6 col-xs-12 "
+                    <div key={i} className=" col-lg-3 col-md-6 col-sm-6 col-xs-12 "
                          onClick={() => setDetailsPane({visible: true, genre: item})}>
                         <a className="cursor-pointer" onClick={() => setDetailsPane({visible: true, genre: item})}
                         >

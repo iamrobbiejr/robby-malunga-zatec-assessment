@@ -1,21 +1,35 @@
-import React, {useState} from 'react';
-import {useStateContext} from "../contexts/ContextProvider.jsx";
-import {useNavigate} from "react-router-dom";
+import React, {useEffect, useState} from 'react';
+import axiosClient from "../../axios.jsx";
+import router from "../../router.jsx";
 
 function NavBar(props) {
 
-    const {currentUser, userToken} = useStateContext();
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const navigator = useNavigate();
 
-    if (!userToken) {
-        setIsLoggedIn(false)
-    } else {
-        setIsLoggedIn(true)
-    }
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    useEffect(() => {
+        console.log("user: ", props);
+        if (!props.userToken) {
+            setIsLoggedIn(false)
+        } else {
+            setIsLoggedIn(true)
+        }
+    }, [])
+
 
     const logout = (e) => {
         e.preventDefault();
+
+        axiosClient.post('/logout')
+            .then(res => {
+                console.log(res)
+
+                //     remove current user & token
+                props.setCurrentUser({})
+                props.setUserToken(null)
+                router.navigate('/')
+                window.location.reload();
+            })
     }
 
     return (
@@ -43,7 +57,7 @@ function NavBar(props) {
                                 <div className="collapse navbar-collapse pt-3 pb-2 py-lg-0 w-100" id="navigation">
                                     <ul className="navbar-nav navbar-nav-hover ms-auto">
 
-                                        {!isLoggedIn ? (
+                                        {!isLoggedIn && (
                                             <>
                                                 <li className="nav-item my-auto ms-3 ms-lg-0">
                                                     <a href={'/login'}
@@ -55,24 +69,24 @@ function NavBar(props) {
                                                        className="btn btn-sm  bg-gradient-dark  mb-0 me-1 mt-2 mt-md-0">Register</a>
                                                 </li>
                                             </>
-                                        ) : (
-                                            <li className="nav-item dropdown dropdown-hover mx-2 my-auto ms-3 ms-lg-0">
-                                                <a className="btn btn-sm  bg-gradient-primary ps-2 d-flex cursor-pointer align-items-center mb-0 me-1 mt-2 mt-md-0"
-                                                   id="dropdownMenuDocs" data-bs-toggle="dropdown"
-                                                   aria-expanded="false">
-                                                    <i className="material-icons opacity-6 me-2 text-md">
-                                                        account_circle</i>
-                                                    {currentUser.name}
-                                                    <img src="/img/down-arrow-white.svg" alt="down-arrow"
-                                                         className="arrow ms-auto ms-md-2"/>
-                                                </a>
+                                        )} {isLoggedIn && (
+                                        <li className="nav-item dropdown dropdown-hover mx-2 my-auto ms-3 ms-lg-0">
+                                            <a className="btn btn-sm  bg-gradient-primary ps-2 d-flex cursor-pointer align-items-center mb-0 me-1 mt-2 mt-md-0"
+                                               id="dropdownMenuDocs" data-bs-toggle="dropdown"
+                                               aria-expanded="false">
+                                                <i className="material-icons opacity-6 me-2 text-md">
+                                                    account_circle</i>
+                                                {props.currentUser.name}
+                                                <img src="/img/down-arrow-white.svg" alt="down-arrow"
+                                                     className="arrow ms-auto ms-md-2"/>
+                                            </a>
                                                 <ul className="dropdown-menu dropdown-menu-end dropdown-menu-animation dropdown-md dropdown-md-responsive mt-0 mt-lg-3 p-3 border-radius-lg"
                                                     aria-labelledby="dropdownMenuDocs">
                                                     <div className="d-none d-lg-block">
                                                         <ul className="list-group">
                                                             <li className="nav-item list-group-item border-0 p-0">
                                                                 <a className="dropdown-item py-2 ps-3 border-radius-md"
-                                                                   href=" https://www.creative-tim.com/learning-lab/bootstrap/overview/material-kit ">
+                                                                   href={'/dashboard'}>
                                                                     <h6 className="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0">
                                                                         <i className="material-icons">dashboard</i>&nbsp;Dashboard
                                                                     </h6>
@@ -83,7 +97,7 @@ function NavBar(props) {
 
                                                             <li className="nav-item list-group-item border-0 p-0">
                                                                 <a className="dropdown-item py-2 ps-3 border-radius-md"
-                                                                   href=" https://www.creative-tim.com/learning-lab/bootstrap/utilities/material-kit ">
+                                                                   onClick={logout}>
                                                                     <h6 className="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0">
                                                                         <span className="material-icons">logout</span>
                                                                         &nbsp;Logout

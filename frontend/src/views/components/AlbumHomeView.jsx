@@ -14,8 +14,6 @@ function AlbumHomeView(props) {
     });
     const [detailsPane, setDetailsPane] = useState({visible: false, data: {}})
 
-    console.log('album props: ', props);
-
     const handleOnPaneClose = () => {
         setDetailsPane({visible: false, data: {}})
     }

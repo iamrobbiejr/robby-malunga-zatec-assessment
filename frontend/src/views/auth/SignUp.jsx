@@ -2,6 +2,8 @@ import React from 'react';
 import Footer from "../includes/Footer.jsx";
 
 function SignUp(props) {
+
+
     return (
         <div className="page-header align-items-start min-vh-100"
              style={{backgroundImage: "url(" + '/img/bg2.jpg' + ")"}}

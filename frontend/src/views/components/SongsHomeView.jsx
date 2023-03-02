@@ -11,9 +11,10 @@ function SongsHomeView(props) {
                         <th>Title</th>
                         <th>Genre</th>
                         <th>Album</th>
-                        <th><span rel="tooltip"
+                        <th>
+                            <span rel="tooltip"
                                   title="duration" data-placement="top" className="cursor-pointer"><i
-                            className="material-icons">timelapse</i></span></th>
+                                className="material-icons">timelapse</i></span></th>
                         </thead>
                         <tbody>
 

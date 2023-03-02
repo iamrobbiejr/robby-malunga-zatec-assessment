@@ -7,16 +7,24 @@ import React, {useState} from 'react';
 import NavBar from "./includes/NavBar.jsx";
 import ViewAlbumDashboardPane from "./components/partials/ViewAlbumDashboardPane.jsx";
 import UpdateAlbumDashboardPane from "./components/partials/UpdateAlbumDashboardPane.jsx";
+import {useStateContext} from "./contexts/ContextProvider.jsx";
+import AddAlbum from "./components/forms/AddAlbum.jsx";
 
 const Dashboard = () => {
+    const {currentUser, userToken, setUserToken, setCurrentUser} = useStateContext();
 
     // initialize global variables
     const [detailsPane, setDetailsPane] = useState({visible: false, data: {}})
     const [updateDetailsPane, setUpdateDetailsPane] = useState({visible: false, data: {}})
+    const [addAlbumPane, setAddAlbumPane] = useState({visible: false})
     const [albums, setAlbums] = useState([]);
     const [request, setRequest] = useState({});
     const handleOnPaneClose = () => {
         setDetailsPane({visible: false, data: {}})
+    }
+
+    const handleOnAddPaneClose = () => {
+        setAddAlbumPane({visible: false})
     }
 
     const handleOnUpdatePaneClose = () => {
@@ -37,6 +45,9 @@ const Dashboard = () => {
     return (
         <>
             {/*    add sliding pane to view clicked album details */}
+            <AddAlbum visible={addAlbumPane.visible} closePane={handleOnAddPaneClose}/>
+            {/* end pane */}
+            {/*    add sliding pane to view clicked album details */}
             <ViewAlbumDashboardPane visible={detailsPane.visible} data={detailsPane.data}
                                     closePane={handleOnPaneClose}/>
             {/* end pane */}
@@ -45,7 +56,8 @@ const Dashboard = () => {
                                       closePane={handleOnUpdatePaneClose}/>
             {/* end pane */}
             {/*    navbar component */}
-            <NavBar/>
+            <NavBar currentUser={currentUser} userToken={userToken} setUserToken={setUserToken}
+                    setCurrentUser={setCurrentUser}/>
             {/*   end navbar component */}
             {/*    header section*/}
             <header className="header-2">
@@ -72,7 +84,8 @@ const Dashboard = () => {
                 </div>
                 <div className="row mt-3 p-3">
                     <div className="col-md-3">
-                        <button className="btn btn-icon btn-2 btn-sm btn-primary" type="button">
+                        <button onClick={() => setAddAlbumPane({visible: true})}
+                                className="btn btn-icon btn-2 btn-sm btn-primary">
                             <span className="btn-inner--icon"><i className="ni ni-button-play"></i></span>
                             <span className="btn-inner--text">Add New Album</span>
                         </button>
@@ -144,6 +157,8 @@ const Dashboard = () => {
                     </div>
                 </div>
             </div>
+            {/*    Modals */}
+
         </>
     );
 }
