@@ -23,11 +23,11 @@ class AlbumStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string|max:100',
-            'description' => 'required|string|max:1000',
-            'cover_image_url' => 'required|string',
+            'title' => 'required|string',
+            'description' => 'required|string',
+            'cover_image_url' => 'required',
             'user_id' => 'exists:users,id',
-            'release_date' => 'required|date|before:today'
+            'release_date' => 'required'
         ];
     }
 

@@ -73,7 +73,8 @@ class AlbumController extends Controller
             Log::error($e->getMessage());
 
             return response()->json([
-                'message' => 'Something went wrong while creating album!!'
+                'message' => 'Something went wrong while creating album!!',
+                "error" => $e,
             ], 500);
         }
     }

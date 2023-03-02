@@ -21,7 +21,7 @@ class Album extends Model
     /**
      * @var array
      */
-    protected $fillable = ['title', 'description', 'release_date', 'cover_image_url'];
+    protected $fillable = ['title', 'description', 'release_date', 'cover_image_url', 'user_id'];
 
 
     /**
