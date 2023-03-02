@@ -1,6 +1,22 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import axiosClient from "../../axios.jsx";
 
 function SongsHomeView(props) {
+
+    const [songs, setSongs] = useState([]);
+
+    useEffect(() => {
+
+        axiosClient.get('/songs')
+            .then(res => {
+                console.log("songs: ", res)
+                setSongs(res.data.data)
+            }).catch(err => {
+            console.log(err)
+        })
+
+    }, [])
+
     return (
         <>
             <div className="card row container p-5 m-lg-auto">
@@ -10,35 +26,32 @@ function SongsHomeView(props) {
                         <th></th>
                         <th>Title</th>
                         <th>Genre</th>
-                        <th>Album</th>
                         <th>
                             <span rel="tooltip"
                                   title="duration" data-placement="top" className="cursor-pointer"><i
                                 className="material-icons">timelapse</i></span></th>
                         </thead>
                         <tbody>
-
-                        <tr>
-                            <td>
-                                <div className="d-flex px-2 py-1">
-                                    <div>
-                                        <span className="material-icons">audiotrack</span>
+                        {songs.map((song, i) => (
+                            <tr key={i}>
+                                <td>
+                                    <div className="d-flex px-2 py-1">
+                                        <div>
+                                            <span className="material-icons">audiotrack</span>
+                                        </div>
                                     </div>
-                                </div>
-                            </td>
-                            <td>
-                                Fall
-                            </td>
-                            <td>
-                                Afro Soul
-                            </td>
-                            <td>
-                                Album 1
-                            </td>
-                            <td>
-                                4 min 20 sec
-                            </td>
-                        </tr>
+                                </td>
+                                <td>
+                                    {song.title}
+                                </td>
+                                <td>
+                                    {song.genre}
+                                </td>
+                                <td>
+                                    {song.length}
+                                </td>
+                            </tr>
+                        ))}
 
                         </tbody>
                     </table>

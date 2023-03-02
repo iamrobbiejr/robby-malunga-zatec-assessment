@@ -3,62 +3,83 @@
  *
  */
 
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import NavBar from "./includes/NavBar.jsx";
-import ViewAlbumDashboardPane from "./components/partials/ViewAlbumDashboardPane.jsx";
-import UpdateAlbumDashboardPane from "./components/partials/UpdateAlbumDashboardPane.jsx";
 import {useStateContext} from "./contexts/ContextProvider.jsx";
 import AddAlbum from "./components/forms/AddAlbum.jsx";
+import axiosClient from "../axios.jsx";
+import {css} from "@emotion/react";
+import {BeatLoader} from "react-spinners";
+import router from "../router.jsx";
+
+const override = css`
+    display: block;
+    margin: 0 auto;
+`;
 
 const Dashboard = () => {
     const {currentUser, userToken, setUserToken, setCurrentUser} = useStateContext();
 
     // initialize global variables
-    const [detailsPane, setDetailsPane] = useState({visible: false, data: {}})
-    const [updateDetailsPane, setUpdateDetailsPane] = useState({visible: false, data: {}})
+
     const [addAlbumPane, setAddAlbumPane] = useState({visible: false})
     const [albums, setAlbums] = useState([]);
     const [request, setRequest] = useState({});
-    const handleOnPaneClose = () => {
-        setDetailsPane({visible: false, data: {}})
-    }
+    const [albumsLoading, setAlbumsLoading] = useState(false);
 
     const handleOnAddPaneClose = () => {
         setAddAlbumPane({visible: false})
     }
 
-    const handleOnUpdatePaneClose = () => {
-        setUpdateDetailsPane({visible: false, data: {}})
+    const handleOnSuccessAddClose = () => {
+        getAllAlbums()
+        setAddAlbumPane({visible: false})
     }
 
-    const handleChange = name => ({target: {value}}) => {
-        setRequest({...request, [name]: value})
-    }
 
-    const handleUpdateAlbum = () => {
-
-    }
     const handleDeleteAlbum = (album) => {
 
     }
 
+    const getAllAlbums = () => {
+        setAlbumsLoading(true);
+        //     retrieve albums
+        axiosClient.get('/albums/' + currentUser.id)
+            .then(res => {
+                console.log("data: ", res.data)
+                setAlbums(res.data.data);
+                setAlbumsLoading(false);
+            }).catch((err) => {
+            console.error(err);
+            setAlbums([])
+            setAlbumsLoading(false);
+        })
+    }
+
+
+    useEffect(() => {
+        getAllAlbums()
+
+    }, [])
+
+    function openEditForm(data) {
+        console.log("clicked: ", data)
+        localStorage.setItem('albumId', data.id);
+        router.navigate('/update-album')
+    }
+
     return (
         <>
-            {/*    add sliding pane to view clicked album details */}
-            <AddAlbum visible={addAlbumPane.visible} closePane={handleOnAddPaneClose}/>
-            {/* end pane */}
-            {/*    add sliding pane to view clicked album details */}
-            <ViewAlbumDashboardPane visible={detailsPane.visible} data={detailsPane.data}
-                                    closePane={handleOnPaneClose}/>
-            {/* end pane */}
-            {/*    add sliding pane to edit clicked album details */}
-            <UpdateAlbumDashboardPane visible={updateDetailsPane.visible} data={updateDetailsPane.data}
-                                      closePane={handleOnUpdatePaneClose}/>
-            {/* end pane */}
             {/*    navbar component */}
             <NavBar currentUser={currentUser} userToken={userToken} setUserToken={setUserToken}
                     setCurrentUser={setCurrentUser}/>
             {/*   end navbar component */}
+
+            {/*    add sliding pane to view clicked album details */}
+            <AddAlbum visible={addAlbumPane.visible} closePane={handleOnAddPaneClose}
+                      closeAfterSuccessPane={handleOnSuccessAddClose}/>
+            {/* end pane */}
+
             {/*    header section*/}
             <header className="header-2">
                 <div className="page-header min-vh-35 relative"
@@ -90,74 +111,91 @@ const Dashboard = () => {
                             <span className="btn-inner--text">Add New Album</span>
                         </button>
                     </div>
-                    <div className="card">
-                        <div className="table-responsive">
-                            <table className="table align-items-center mb-0">
-                                <thead>
-                                <tr>
-                                    <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Title</th>
-                                    <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Description</th>
-                                    <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Released</th>
-                                    <th className="text-secondary opacity-7"></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {albums.map((item, i) => (
-                                    <tr>
-                                        <td>
-                                            <div className="d-flex px-2 py-1">
-                                                <div>
-                                                    <img
-                                                        src={item?.cover_image_url}
-                                                        className="avatar avatar-lg me-3"/>
-                                                </div>
-                                                <div className="d-flex flex-column justify-content-center">
-                                                    <h6 className="mb-0 text-xs">{item?.title}</h6>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td className="align-middle text-center text-sm">
-                                            <p>{item?.description}</p>
-                                        </td>
+                    {albumsLoading && (
+                        <div className="container ml-lg-8 p-lg-4">
+                            <BeatLoader
+                                color={"#E53371"}
+                                loading={albumsLoading}
+                                cssOverride={override}
+                                size={30}
+                                aria-label="Loading Spinner"
+                                data-testid="loader"/>
 
-                                        <td className="align-middle text-center">
+                        </div>
+
+                    )}
+                    {!albumsLoading && (
+                        <div className="card">
+                            <div className="table-responsive">
+                                <table className="table align-items-center mb-0">
+                                    <thead>
+                                    <tr>
+                                        <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Title</th>
+                                        <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Description</th>
+                                        <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Released</th>
+                                        <th className="text-secondary opacity-7"></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {albums.map((item, i) => (
+                                        <tr key={i}>
+                                            <td>
+                                                <div className="d-flex px-2 py-1">
+                                                    <div>
+                                                        <img
+                                                            src={`${import.meta.env.VITE_API_BASE_URL}/${item?.cover_image_url}`}
+                                                            className="avatar avatar-lg me-3"/>
+                                                    </div>
+                                                    <div className="d-flex flex-column justify-content-center">
+                                                        <h6 className="mb-0 text-sm">{item?.title}</h6>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td className="align-middle text-sm">
+                                                <p className="text-sm">{item?.description}</p>
+                                            </td>
+
+                                            <td className="align-middle text-center">
                                             <span
-                                                className="text-secondary text-xs font-weight-normal">{item?.release_date}</span>
-                                        </td>
-                                        <td className="align-middle">
-                                            <button onClick={() => setDetailsPane({visible: true, data: item})}
-                                                    className="btn btn-icon btn-sm btn-info"
-                                                    data-toggle="tooltip" data-original-title="Delete Album">
+                                                className="text-secondary text-sm font-weight-normal">{item?.release_date}</span>
+                                            </td>
+                                            <td className="align-middle">
+                                                <button onClick={() => {
+                                                    localStorage.setItem('album', JSON.stringify(item))
+                                                    router.navigate('/album')
+                                                }}
+                                                        className="btn btn-icon btn-sm btn-info"
+                                                        data-toggle="tooltip" data-original-title="View Album">
                                                 <span className="btn-inner--text"><i
-                                                    className="material-icons text-lg me-2">visibility</i>View</span>
-                                            </button>
-                                            &nbsp;
-                                            &nbsp;
-                                            <button onClick={() => setUpdateDetailsPane({visible: true, data: item})}
-                                                    className="btn btn-icon btn-sm btn-success"
-                                                    data-toggle="tooltip" data-original-title="Delete Album">
+                                                    className="material-icons text-lg me-2">audiotrack</i>Manage Songs</span>
+                                                </button>
+                                                &nbsp;
+                                                &nbsp;
+                                                <button onClick={() => openEditForm(item)}
+                                                        className="btn btn-icon btn-sm btn-success"
+                                                        data-toggle="tooltip" data-original-title="Update Album">
                                                 <span className="btn-inner--text"><i
                                                     className="material-icons text-lg me-2">edit</i> Edit</span>
-                                            </button>
-                                            &nbsp;&nbsp;
-                                            <button onClick={() => handleDeleteAlbum(item)}
-                                                    className="btn btn-sm btn-danger"
-                                                    data-toggle="tooltip" data-original-title="Delete Album">
+                                                </button>
+                                                &nbsp;&nbsp;
+                                                <button onClick={() => handleDeleteAlbum(item)}
+                                                        className="btn btn-sm btn-danger"
+                                                        data-toggle="tooltip" data-original-title="Delete Album">
                                                 <span className="btn-inner--text"><i
                                                     className="material-icons text-lg me-2">delete</i>Delete</span>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
 
 
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
             </div>
-            {/*    Modals */}
 
         </>
     );

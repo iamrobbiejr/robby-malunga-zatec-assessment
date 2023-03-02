@@ -10,7 +10,7 @@ const override = css`
     margin: 0 auto;
 `;
 
-function AddAlbum({visible, closePane}) {
+function AddAlbum({visible, closePane, closeAfterSuccessPane}) {
 
     const {currentUser} = useStateContext();
 
@@ -54,8 +54,9 @@ function AddAlbum({visible, closePane}) {
         axiosClient.post("/album", payload)
             .then(res => {
                 console.log(res)
+
+                closeAfterSuccessPane()
                 setLoading(false)
-                closePane()
             })
             .catch(err => {
                 console.log(err)

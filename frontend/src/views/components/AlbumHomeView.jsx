@@ -1,22 +1,33 @@
 import React, {useEffect, useState} from 'react';
 import AlbumPane from "./partials/AlbumPane.jsx";
+import axiosClient from "../../axios.jsx";
 
 function AlbumHomeView(props) {
 
     // initialize variables
-    const [album, setAlbum] = useState({
-        'id': '',
-        'title': '',
-        'description': '',
-        'cover_image_url': '',
-        'release_date': '',
-        'songs': []
-    });
-    const [detailsPane, setDetailsPane] = useState({visible: false, data: {}})
+    const [detailsPane, setDetailsPane] = useState({
+        visible: false, data: {
+            title: '', description: '', release_date: '', songs: []
+        }
+    })
+    const [albums, setAlbums] = useState([]);
 
     const handleOnPaneClose = () => {
-        setDetailsPane({visible: false, data: {}})
+        setDetailsPane({visible: false, data: {title: '', description: '', release_date: '', songs: []}})
     }
+
+    useEffect(() => {
+
+        axiosClient.get('/albums')
+            .then(res => {
+                console.log("albums: ", res)
+                setAlbums(res.data.data)
+            })
+            .catch(err => {
+                console.log(err)
+            })
+
+    }, [])
 
     return (
         <>
@@ -25,12 +36,12 @@ function AlbumHomeView(props) {
             {/* end pane */}
             <div className="row">
                 {/*loop through the albums*/}
-                {props.albums.map((item, i) => (
+                {albums.map((item, i) => (
                     <div key={i} className="col-lg-4 col-md-4 col-sm-6 col-xs-12"
                          onClick={() => setDetailsPane({visible: true, data: item})}>
                         <div className="container mt-sm-5">
                             <div className="page-header py-6 py-md-5 my-sm-3 mb-3 border-radius-xl"
-                                 style={{backgroundImage: "url(" + item.cover_image_url + ")"}}
+                                 style={{backgroundImage: "url(" + import.meta.env.VITE_API_BASE_URL + '/' + item.cover_image_url + ")"}}
                                  loading="lazy">
                                 <span className="mask bg-gradient-dark"></span>
                                 <div className="container">

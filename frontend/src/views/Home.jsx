@@ -2,24 +2,19 @@
  * Home Page - First Screen - Guest Screen
  */
 
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {useStateContext} from "./contexts/ContextProvider.jsx";
 import NavBar from "./includes/NavBar.jsx";
 import AlbumHomeView from "./components/AlbumHomeView.jsx";
 import GenreHomeView from "./components/GenreHomeView.jsx";
 import SongsHomeView from "./components/SongsHomeView.jsx";
+import axiosClient from "../axios.jsx";
 
 
 function Home(props) {
 
     const {currentUser, userToken, setUserToken, setCurrentUser} = useStateContext();
 
-    console.log("home user: " + currentUser);
-
-    //   initialize variables
-    const [albums, setAlbums] = useState([]);
-    const [genres, SetGenres] = useState([]); //list of most popular genres
-    const [songs, setSongs] = useState([]);
 
     return (
         <>
@@ -84,7 +79,7 @@ function Home(props) {
                                             <h2 className=" p-3 mt-2">Albums</h2>
                                         </div>
                                         {/*    albums section */}
-                                        <AlbumHomeView albums={albums}/>
+                                        <AlbumHomeView/>
                                         {/*   end albums section */}
                                     </>
                                 </div>

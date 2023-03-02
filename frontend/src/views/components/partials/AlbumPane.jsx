@@ -12,7 +12,8 @@ function AlbumPane({visible, data, closePane}) {
                      hideHeader={true}
         >
 
-            <img src={data?.cover_image_url} className="img-fluid border-radius-lg shadow shadow-blur shadow-dark"
+            <img src={import.meta.env.VITE_API_BASE_URL + "/" + data?.cover_image_url}
+                 className="img-fluid border-radius-lg shadow shadow-blur shadow-dark"
                  style={{width: "100%", height: "35%"}}
                  alt=""/>
             <h4 className="text-dark pt-2">{data?.title}</h4>
@@ -33,24 +34,26 @@ function AlbumPane({visible, data, closePane}) {
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>
-                                <div className="d-flex px-2 py-1">
-                                    <div>
-                                        <img
-                                            src="/img/vinyl-record-isolated.jpg"
-                                            className="avatar avatar-sm me-3"/>
+                        {data?.songs.map((song, i) => (
+                            <tr key={i}>
+                                <td>
+                                    <div className="d-flex px-2 py-1">
+                                        <div>
+                                            <img
+                                                src="/img/vinyl-record-isolated.jpg"
+                                                className="avatar avatar-sm me-3"/>
+                                        </div>
+                                        <div className="d-flex flex-column justify-content-center">
+                                            <h6 className="mb-0 text-xs">Title: {song.title}</h6>
+                                            <p className="text-xs text-secondary mb-0">Genre: {song.genre}</p>
+                                        </div>
                                     </div>
-                                    <div className="d-flex flex-column justify-content-center">
-                                        <h6 className="mb-0 text-xs">Title: Fall</h6>
-                                        <p className="text-xs text-secondary mb-0">Genre: Pop</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td className="align-middle text-center">
-                                <span className="text-secondary text-xs font-weight-normal">23/04/18</span>
-                            </td>
-                        </tr>
+                                </td>
+                                <td className="align-middle text-center">
+                                    <span className="text-secondary text-xs font-weight-normal">{song.length}</span>
+                                </td>
+                            </tr>
+                        ))}
 
                         </tbody>
                     </table>

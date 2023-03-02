@@ -1,25 +1,26 @@
 import React, {useState} from 'react';
 import GenrePane from "./partials/GenrePane.jsx";
+import router from "../../router.jsx";
 
 function GenreHomeView(props) {
 
     const genres = ['Pop', 'Afro', 'Soul', 'R & B', 'Rock', 'Country', 'Gospel', 'Reggae']
 
-    const [detailsPane, setDetailsPane] = useState({visible: false, genre: ''})
-    const handleOnPaneClose = () => {
-        setDetailsPane({visible: false, genre: ''})
-    }
 
     return (
         <>
-            {/*    add sliding pane to view clicked album details */}
-            <GenrePane visible={detailsPane.visible} genre={detailsPane.genre} closePane={handleOnPaneClose}/>
-            {/* end pane */}
+
             <div className="row">
                 {genres.map((item, i) => (
                     <div key={i} className=" col-lg-3 col-md-6 col-sm-6 col-xs-12 "
-                         onClick={() => setDetailsPane({visible: true, genre: item})}>
-                        <a className="cursor-pointer" onClick={() => setDetailsPane({visible: true, genre: item})}
+                         onClick={() => {
+                             localStorage.setItem('genre', item)
+                             router.navigate('/genre')
+                         }}>
+                        <a className="cursor-pointer" onClick={() => {
+                            localStorage.setItem('genre', item)
+                            router.navigate('/genre')
+                        }}
                         >
                             <div className="container mt-sm-5">
                                 <div className="page-header py-6 py-md-5 my-sm-3 mb-3 border-radius-xl"

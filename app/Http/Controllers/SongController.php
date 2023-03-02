@@ -31,7 +31,21 @@ class SongController extends Controller
     public function albumSongs(Album $album)
     {
         // retrieve all songs owned by an album
-        $songs = Song::where('album_id', $album->id)->all();
+        $songs = Song::where('album_id', $album->id)->get();
+
+        return response()->json([
+            'message' => 'All songs',
+            'data' => $songs
+        ]);
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function songsByGenre(Request $request)
+    {
+        // retrieve all songs by selected genre
+        $songs = Song::where('genre', $request->genre)->get();
 
         return response()->json([
             'message' => 'All songs',

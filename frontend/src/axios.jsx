@@ -16,8 +16,8 @@ axiosClient.interceptors.response.use(response => {
     return response;
 }, error => {
     if (error.response && error.response.status === 401) {
-        window.location.reload();
-        // router.navigate('/login');
+        // window.location.reload();
+        router.navigate('/login');
         return error;
     }
 

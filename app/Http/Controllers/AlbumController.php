@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AlbumStoreRequest;
+use App\Http\Requests\AlbumUpdateRequest;
 use App\Models\Album;
+use App\Models\Song;
+use App\Models\User;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
@@ -24,6 +27,11 @@ class AlbumController extends Controller
         // retrieve all albums
         $albums = Album::all();
 
+        foreach ($albums as $album) {
+            $songs = Song::where('album_id', $album->id)->get();
+            $album->songs = $songs;
+        }
+
         return response([
             'message' => 'All albums available',
             'data' => $albums
@@ -40,6 +48,11 @@ class AlbumController extends Controller
         $albums = Album::where('user_id', $user->id)
             ->orderBy('created_at', 'desc')
             ->get();
+
+        foreach ($albums as $album) {
+            $songs = Song::where('album_id', $album->id)->get();
+            $album->songs = $songs;
+        }
 
         return response()->json([
             'message' => 'All albums available',
@@ -138,33 +151,28 @@ class AlbumController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Album $album)
+    public function update(AlbumUpdateRequest $request, Album $album)
     {
-        $request->validate([
-            'title' => 'required',
-            'description' => 'required',
-            'cover_image_url' => 'nullable'
-        ]);
+        $data = $request->validated();
 
         try {
-
-            $album->fill($request->post())->update();
-
-            if ($request->hasFile('cover_image_url')) {
-
-                // remove old cover_image_url
+            //check if image was changed
+            if ($request->cover_image_url !== $album->cover_image_url) {
+                // If there is an old image, delete it
                 if ($album->cover_image_url) {
-                    $exists = Storage::disk('public')->exists("albums/image/{$album->cover_image_url}");
-                    if ($exists) {
-                        Storage::disk('public')->delete("albums/image/{$album->cover_image_url}");
-                    }
+                    $absolutePath = public_path($album->cover_image_url);
+                    File::delete($absolutePath);
                 }
 
-                $imageName = Str::random() . '.' . $request->cover_image_url->getClientOriginalExtension();
-                Storage::disk('public')->putFileAs('product/cover_image_url', $request->cover_image_url, $imageName);
-                $album->cover_image_url = $imageName;
-                $album->save();
+                // save on local file system
+                if (isset($data['cover_image_url'])) {
+
+                    $relativePath = $this->saveImage($data['cover_image_url']);
+                    $data['cover_image_url'] = $relativePath;
+                }
             }
+
+            $album->update($data);
 
             return response()->json([
                 'message' => 'Album Updated Successfully!!'
@@ -173,7 +181,10 @@ class AlbumController extends Controller
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             return response()->json([
-                'message' => 'Something went wrong while updating album!!'
+                'message' => 'Something went wrong while updating album!!',
+                "error" => $e,
+                'album' => $album,
+                'request' => $request->all()
             ], 500);
         }
     }

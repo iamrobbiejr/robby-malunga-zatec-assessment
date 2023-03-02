@@ -20,13 +20,16 @@ use Illuminate\Support\Facades\Route;
 // public routes
 Route::post('/signup', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::get('/albums', [AlbumController::class, 'index']);
+Route::get('/songs', [SongController::class, 'index']);
+Route::get('/genre/{genre}', [SongController::class, 'songsByGenre']);
 
 // private routes
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::apiResource('album', AlbumController::class);
     Route::apiResource('song', SongController::class);
-    Route::get('/song/{album}', [SongController::class, 'albumSongs']);
+    Route::get('/songs/{album}', [SongController::class, 'albumSongs']);
     Route::get('/albums/{user}', [AlbumController::class, 'dashboardIndex']);
 });
 
