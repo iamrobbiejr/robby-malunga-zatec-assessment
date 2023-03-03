@@ -78,15 +78,16 @@ function Login(props) {
                                     </div>
                                 )}
                                 <form onSubmit={handleLogin} role="form" className="text-start">
-                                    <div className="input-group input-group-outline my-3">
+                                    <div className="input-group input-group-static my-3">
                                         <label className="form-label">Email</label>
-                                        <input disabled={loading} value={email}
+                                        <input title="email" id="email" name="email" disabled={loading} value={email}
                                                onChange={(e) => setEmail(e.target.value)} type="email"
                                                className="form-control"/>
                                     </div>
-                                    <div className="input-group input-group-outline mb-3">
+                                    <div className="input-group input-group-static mb-3">
                                         <label className="form-label">Password</label>
-                                        <input disabled={loading} value={password}
+                                        <input title="password" id="password" name="password" disabled={loading}
+                                               value={password}
                                                onChange={(e) => setPassword(e.target.value)}
                                                type="password" className="form-control"/>
                                     </div>
