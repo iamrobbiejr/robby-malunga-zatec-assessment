@@ -20,14 +20,29 @@ Project was created using Laravel & ReactJS
    database
 4. Open project folder from the command line
 5. Run the following commands:
+
+``` 
     1. Composer Update
-    2. php artisan migrate --seed - this will create the required tables into your database and also dump a default user
-       account for testing purposes. (email: admin@example.com, password: Admin@1234)
-    3. php artisan serve - this will start your backend server
-    4. Open new terminal and change directory (cd) into the frontend directory (/project/frontend/) inside your project
-       folder
-    5. Run yarn install
-    6. Next run yarn run dev and this will start your frontend server
+    2. php artisan migrate --seed  
+```
+
+The above will create the required tables into your database and also dump a default user
+account for testing purposes. (email: admin@example.com, password: Admin@1234)
+
+```
+    3. php artisan serve  
+```
+
+This will start your backend server
+
+4. Open new terminal and change directory (cd) into the frontend directory (/project/frontend/) inside your project
+   folder
+
+```
+    5. yarn install
+    6. yarn run dev 
+```
+
 7. Copy the link displayed on the command line of the frontend server and paste into your browser
 8. You'll see your application running.
 
@@ -35,15 +50,24 @@ Project was created using Laravel & ReactJS
 
 There are some automated tests available to run
 
-### Backend Testing
+### Backend Testing (using PHPUnit)
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
+- Open project folder on command line run:
 
-### Fontend Testing (Using Cypress)
+```
+php artisan test
+```
 
-- From the terminal - cd into /project-folder/fontend
-- Run yarn run cypress open
+- This command will run all tests for our backend api
+
+### Frontend Testing (Using Cypress)
+
+- From the terminal - cd into /project-folder/fontend and type
+
+```
+yarn run cypress open
+```
+
 - This will open the cypress GUI where we'll run our tests
 - There are 2 tests (e2e) that have been created and are located in the cypress folder
 - After opening cypress you'll see the 2 tests and just click the test to run it
