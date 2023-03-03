@@ -25,7 +25,7 @@ Project was created using Laravel & ReactJS
     1. Composer Update
     2. php artisan migrate --seed  
 ```
-
+If you want inside folder */database/dumps/* there are some dump files you can import to you mysql database before hand
 The above will create the required tables into your database and also dump a default user
 account for testing purposes. (email: admin@example.com, password: Admin@1234)
 
