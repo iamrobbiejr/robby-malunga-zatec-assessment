@@ -1,9 +1,16 @@
-import React, {useState, CSSProperties} from 'react';
+import React, {useState} from 'react';
 import SlidingPane from "react-sliding-pane";
 import axiosClient from "../../../axios.jsx";
 import {BeatLoader} from "react-spinners";
 import {css} from "@emotion/react";
 import {useStateContext} from "../../contexts/ContextProvider.jsx";
+import ToastService from 'react-material-toast';
+
+const toast = ToastService.new({
+    place: 'topRight',
+    duration: 2,
+    maxCount: 8
+});
 
 const override = css`
     display: block;
@@ -54,12 +61,17 @@ function AddAlbum({visible, closePane, closeAfterSuccessPane}) {
         axiosClient.post("/album", payload)
             .then(res => {
                 console.log(res)
-
+                toast.success('Album Created Successfully', () => {
+                    console.log('closed')
+                })
                 closeAfterSuccessPane()
                 setLoading(false)
             })
             .catch(err => {
                 console.log(err)
+                toast.error('Operation Failed,Please try again', () => {
+                    console.log('closed')
+                })
                 setLoading(false)
             })
 

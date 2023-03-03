@@ -3,6 +3,13 @@ import Footer from "../includes/Footer.jsx";
 import axiosClient from "../../axios.jsx";
 import {useStateContext} from "../contexts/ContextProvider.jsx";
 import router from "../../router.jsx";
+import {BeatLoader} from "react-spinners";
+import {css} from "@emotion/react";
+
+const override = css`
+    display: block;
+    margin: 0 auto;
+`;
 
 function Login(props) {
 
@@ -12,9 +19,18 @@ function Login(props) {
     const [password, setPassword] = useState('')
     const [remember, setRemember] = useState(false)
     const [error, setError] = useState({__html: ''})
+    const [loading, setLoading] = useState(false)
 
     const handleLogin = (e) => {
+        setLoading(true)
         e.preventDefault();
+
+        if (email === '' || password === "") {
+            setError({__html: 'Required: Please fill all fields'})
+            setLoading(false)
+            return;
+        }
+
 
         axiosClient.post('/login', {email, password, remember})
             .then(({data}) => {
@@ -30,10 +46,10 @@ function Login(props) {
                     setError({__html: error.response.data.error})
 
                     console.error("error: ", error.response.data.error)
+                    setLoading(false)
 
                 }
-
-
+                setLoading(false)
             })
 
     }
@@ -64,30 +80,51 @@ function Login(props) {
                                 <form onSubmit={handleLogin} role="form" className="text-start">
                                     <div className="input-group input-group-outline my-3">
                                         <label className="form-label">Email</label>
-                                        <input value={email} onChange={(e) => setEmail(e.target.value)} type="email"
+                                        <input disabled={loading} value={email}
+                                               onChange={(e) => setEmail(e.target.value)} type="email"
                                                className="form-control"/>
                                     </div>
                                     <div className="input-group input-group-outline mb-3">
                                         <label className="form-label">Password</label>
-                                        <input value={password} onChange={(e) => setPassword(e.target.value)}
+                                        <input disabled={loading} value={password}
+                                               onChange={(e) => setPassword(e.target.value)}
                                                type="password" className="form-control"/>
                                     </div>
                                     <div className="form-check form-switch d-flex align-items-center mb-3">
-                                        <input className="form-check-input" type="checkbox" id="rememberMe"
+                                        <input disabled={loading} className="form-check-input" type="checkbox"
+                                               id="rememberMe"
                                                checked={remember} onChange={() => setRemember(!remember)}/>
                                         <label className="form-check-label mb-0 ms-3" htmlFor="rememberMe">Remember
                                             me</label>
                                     </div>
-                                    <div className="text-center">
-                                        <button type="submit" className="btn bg-gradient-primary w-100 my-4 mb-2">Sign
-                                            in
-                                        </button>
-                                    </div>
-                                    <a href={'/register'}>
-                                        <p className="mt-4 text-sm text-center">
-                                            Don't have an account? Register
-                                        </p>
-                                    </a>
+                                    {loading && (
+                                        <div className="container mx-auto text-center p-lg-4">
+                                            <BeatLoader
+                                                color={"#E53371"}
+                                                loading={loading}
+                                                cssOverride={override}
+                                                size={10}
+                                                aria-label="Loading Spinner"
+                                                data-testid="loader"/>
+
+                                        </div>
+
+                                    )}
+                                    {!loading && (
+                                        <>
+                                            <div className="text-center">
+                                                <button type="submit"
+                                                        className="btn bg-gradient-primary w-100 my-4 mb-2">Sign
+                                                    in
+                                                </button>
+                                            </div>
+                                            <a href={'/register'}>
+                                                <p className="mt-4 text-sm text-center">
+                                                    Don't have an account? Register
+                                                </p>
+                                            </a>
+                                        </>
+                                    )}
 
                                 </form>
                             </div>

@@ -4,6 +4,13 @@ import axiosClient from "../../../axios.jsx";
 import {BeatLoader} from "react-spinners";
 import {css} from "@emotion/react";
 import {useStateContext} from "../../contexts/ContextProvider.jsx";
+import ToastService from 'react-material-toast';
+
+const toast = ToastService.new({
+    place: 'topRight',
+    duration: 2,
+    maxCount: 8
+});
 
 const override = css`
     display: block;
@@ -36,12 +43,17 @@ function AddSong({visible, album, closePane, closeAfterSuccessPane}) {
         axiosClient.post("/song", payload)
             .then(res => {
                 console.log(res)
-
+                toast.success('Song successfully added to album', () => {
+                    console.log('closed')
+                })
                 closeAfterSuccessPane()
                 setAddLoading(false)
             })
             .catch(err => {
                 console.log(err)
+                toast.error('Operation Failed,Please try again', () => {
+                    console.log('closed')
+                })
                 setAddLoading(false)
             })
 

@@ -11,6 +11,13 @@ import axiosClient from "../axios.jsx";
 import {css} from "@emotion/react";
 import {BeatLoader} from "react-spinners";
 import router from "../router.jsx";
+import ToastService from 'react-material-toast';
+
+const toast = ToastService.new({
+    place: 'topRight',
+    duration: 2,
+    maxCount: 8
+});
 
 const override = css`
     display: block;
@@ -38,6 +45,22 @@ const Dashboard = () => {
 
 
     const handleDeleteAlbum = (album) => {
+        setAlbumsLoading(true)
+        axiosClient.delete('/album/' + album.id)
+            .then(res => {
+                console.log(res)
+                toast.success('Album Deleted', () => {
+                    console.log('closed')
+                    getAllAlbums()
+                })
+            })
+            .catch(err => {
+                console.log(err)
+                toast.error('Operation failed, Please try again', () => {
+                    console.log('closed')
+                })
+                setAlbumsLoading(false)
+            })
 
     }
 
