@@ -5,6 +5,13 @@ import axiosClient from "../../../axios.jsx";
 import {BeatLoader} from "react-spinners";
 import NavBar from "../../includes/NavBar.jsx";
 import {useStateContext} from "../../contexts/ContextProvider.jsx";
+import ToastService from 'react-material-toast';
+
+const toast = ToastService.new({
+    place: 'topRight',
+    duration: 2,
+    maxCount: 8
+});
 
 const override = css`
     display: block;
@@ -59,10 +66,16 @@ function UpdateAlbum() {
         axiosClient.put("/album/" + payload.id, payload)
             .then(res => {
                 console.log(res)
+                toast.success('Album Updated', () => {
+                    console.log('closed')
+                })
                 setAlbumLoading(false)
             })
             .catch(err => {
                 console.log(err)
+                toast.error('Operation Failed,Please try again', () => {
+                    console.log('closed')
+                })
                 setAlbumLoading(false)
             })
 

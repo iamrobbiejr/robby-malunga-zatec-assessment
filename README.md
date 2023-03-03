@@ -10,7 +10,7 @@ Project was created using Laravel & ReactJS
 
 - Composer
 - NodeJS v16 and above
-- Xampp / Wampp - Any local server that can allow you to serve php projects
+- Xampp / Wamp - Any local server that can allow you to serve php projects
 
 ## Setting Up
 
@@ -21,7 +21,8 @@ Project was created using Laravel & ReactJS
 4. Open project folder from the command line
 5. Run the following commands:
     1. Composer Update
-    2. php artisan migrate - this will create the required tables into your database
+    2. php artisan migrate --seed - this will create the required tables into your database and also dump a default user
+       account for testing purposes. (email: admin@example.com, password: Admin@1234)
     3. php artisan serve - this will start your backend server
     4. Open new terminal and change directory (cd) into the frontend directory (/project/frontend/) inside your project
        folder
@@ -39,9 +40,12 @@ There are some automated tests available to run
 - **[Vehikl](https://vehikl.com/)**
 - **[Tighten Co.](https://tighten.co)**
 
-### Fontend Testing
+### Fontend Testing (Using Cypress)
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
+- From the terminal - cd into /project-folder/fontend
+- Run yarn run cypress open
+- This will open the cypress GUI where we'll run our tests
+- There are 2 tests (e2e) that have been created and are located in the cypress folder
+- After opening cypress you'll see the 2 tests and just click the test to run it
 
 

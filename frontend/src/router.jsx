@@ -6,6 +6,7 @@ import Home from "./views/Home.jsx";
 import UpdateAlbum from "./views/components/forms/UpdateAlbum.jsx";
 import AlbumDashboardView from "./views/components/AlbumDashboardView.jsx";
 import SongsByGenre from "./views/components/SongsByGenre.jsx";
+import UpdateSong from "./views/components/forms/UpdateSong.jsx";
 
 const router = createBrowserRouter([
     {
@@ -35,7 +36,11 @@ const router = createBrowserRouter([
     {
         path: '/genre',
         element: <SongsByGenre/>
-    }
+    },
+    {
+        path: '/update-song',
+        element: <UpdateSong/>
+    },
 ])
 
 export default router;

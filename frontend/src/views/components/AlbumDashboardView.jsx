@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import SlidingPane from "react-sliding-pane";
 import "react-sliding-pane/dist/react-sliding-pane.css";
 import axiosClient from "../../axios.jsx";
 import {useStateContext} from "../contexts/ContextProvider.jsx";
@@ -8,6 +7,13 @@ import {BeatLoader} from "react-spinners";
 import {css} from "@emotion/react";
 import router from "../../router.jsx";
 import NavBar from "../includes/NavBar.jsx";
+import ToastService from 'react-material-toast';
+
+const toast = ToastService.new({
+    place: 'topRight',
+    duration: 2,
+    maxCount: 8
+});
 
 const override = css`
     display: block;
@@ -61,6 +67,21 @@ function AlbumDashboardView() {
 
 
     const handleDeleteSong = (song) => {
+        setSongsLoading(true)
+        axiosClient.delete('/song/' + song.id)
+            .then((res) => {
+                console.log(res)
+                toast.success('Song Deleted', () => {
+                    console.log('closed')
+                    getAllSongs()
+                })
+            }).catch(err => {
+            console.log(err)
+            toast.error('Operation failed, Please try again', () => {
+                console.log('closed')
+            })
+            setSongsLoading(false)
+        })
 
     }
 
@@ -181,7 +202,8 @@ function AlbumDashboardView() {
                                         className="material-icons text-lg me-2">edit</i> Edit</span>
                                                         </button>
                                                         &nbsp;&nbsp;
-                                                        <button className="btn btn-sm btn-danger"
+                                                        <button onClick={() => handleDeleteSong(item)}
+                                                                className="btn btn-sm btn-danger"
                                                                 data-toggle="tooltip"
                                                                 data-original-title="Delete Album">
                                     <span className="btn-inner--text"><i

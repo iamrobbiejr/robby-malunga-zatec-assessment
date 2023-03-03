@@ -5,6 +5,13 @@ import axiosClient from "../../../axios.jsx";
 import {BeatLoader} from "react-spinners";
 import NavBar from "../../includes/NavBar.jsx";
 import {useStateContext} from "../../contexts/ContextProvider.jsx";
+import ToastService from 'react-material-toast';
+
+const toast = ToastService.new({
+    place: 'topRight',
+    duration: 2,
+    maxCount: 8
+});
 
 const override = css`
     display: block;
@@ -18,10 +25,9 @@ function UpdateSong() {
     const [request, setRequest] = useState({
         id: '',
         title: '',
-        description: '',
-        cover_image_url: '',
-        release_date: '',
-        user_id: ''
+        genre: '',
+        length: '',
+        album_id: '',
     });
 
     const [songLoading, setSongLoading] = useState(false);
@@ -41,10 +47,16 @@ function UpdateSong() {
         axiosClient.put("/song/" + payload.id, payload)
             .then(res => {
                 console.log(res)
+                toast.success('Song Updated', () => {
+                    console.log('closed')
+                })
                 setSongLoading(false)
             })
             .catch(err => {
                 console.log(err)
+                toast.error('Operation Failed,Please try again', () => {
+                    console.log('closed')
+                })
                 setSongLoading(false)
             })
 
@@ -59,10 +71,9 @@ function UpdateSong() {
                 setRequest({
                     id: res.data.id,
                     title: res.data.title,
-                    description: res.data.description,
-                    cover_image_url: res.data.cover_image_url,
-                    release_date: res.data.release_date,
-                    user_id: res.data.user_id
+                    genre: res.data.genre,
+                    length: res.data.length,
+                    album_id: res.data.album_id,
                 })
                 setSongLoading(false)
             }).catch(err => {
@@ -141,30 +152,30 @@ function UpdateSong() {
                                     <select className="form-control" id="exampleFormControlSelect1" onChange={(ev) =>
                                         setRequest({...request, genre: ev.target.value})
                                     }>
-                                        {genres.map((genre, i) => (
-                                            <option key={i} value={genre}>{genre}</option>
-                                        ))}
+                                        {genres.map((genre, i) => {
+                                            if (genre == request.genre) {
+                                                return (
+                                                    <option key={i} value={genre} selected={true}>{genre}</option>
+                                                )
+                                            } else {
+                                                return (
+                                                    <option key={i} value={genre}>{genre}</option>
+                                                )
+                                            }
+                                        })}
                                     </select>
                                 </div>
                                 <div className="input-group input-group-static my-3">
                                     <label>Duration</label>
-                                    <input type="text" className="form-control" value={request.release_date}
+                                    <input type="text" className="form-control" value={request.length}
                                            onChange={(ev) =>
-                                               setRequest({...request, release_date: ev.target.value})
-                                           }/>
-                                </div>
-                                <div className="input-group input-group-static my-3">
-                                    <label>Album</label>
-                                    <input type="date" className="form-control" value={request.release_date}
-                                           onChange={(ev) =>
-                                               setRequest({...request, release_date: ev.target.value})
+                                               setRequest({...request, length: ev.target.value})
                                            }/>
                                 </div>
                                 <button className="btn btn-sm btn-primary" type="submit"><i
                                     className="fa fa-paper-plane text-sm fa-2x">&nbsp;Submit</i></button>
                             </form>
                         )}
-
                     </div>
                 </div>
             </div>

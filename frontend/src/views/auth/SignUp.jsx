@@ -3,6 +3,13 @@ import Footer from "../includes/Footer.jsx";
 import {useStateContext} from "../contexts/ContextProvider.jsx";
 import axiosClient from "../../axios.jsx";
 import router from "../../router.jsx";
+import {BeatLoader} from "react-spinners";
+import {css} from "@emotion/react";
+
+const override = css`
+    display: block;
+    margin: 0 auto;
+`;
 
 function SignUp(props) {
 
@@ -13,10 +20,17 @@ function SignUp(props) {
     const [password, setPassword] = useState('')
     const [password_confirmation, setPasswordConfirmation] = useState('')
     const [error, setError] = useState({__html: ''})
-
+    const [loading, setLoading] = useState(false)
 
     const handleRegister = (e) => {
+        setLoading(true)
         e.preventDefault();
+
+        if (name === '' || email === '' || password === "" || password_confirmation === '') {
+            setError({__html: 'Required: Please fill all fields'})
+            setLoading(false)
+            return;
+        }
 
         axiosClient.post('/signup', {name, email, password, password_confirmation})
             .then(({data}) => {
@@ -32,9 +46,9 @@ function SignUp(props) {
                     setError({__html: error.response.data.error})
 
                     console.error("error: ", error.response.data.error)
-
+                    setLoading(false)
                 }
-
+                setLoading(false)
             })
 
     }
@@ -66,35 +80,54 @@ function SignUp(props) {
                                 <form role="form" onSubmit={handleRegister} className="text-start">
                                     <div className="input-group input-group-outline my-3">
                                         <label className="form-label">Name</label>
-                                        <input type="text" className="form-control" value={name}
+                                        <input disabled={loading} type="text" className="form-control" value={name}
                                                onChange={(e) => setName(e.target.value)}/>
                                     </div>
                                     <div className="input-group input-group-outline my-3">
                                         <label className="form-label">Email</label>
-                                        <input type="email" className="form-control" value={email}
+                                        <input disabled={loading} type="email" className="form-control" value={email}
                                                onChange={(e) => setEmail(e.target.value)}/>
                                     </div>
                                     <div className="input-group input-group-outline mb-3">
                                         <label className="form-label">Password</label>
-                                        <input type="password" className="form-control" value={password}
+                                        <input disabled={loading} type="password" className="form-control"
+                                               value={password}
                                                onChange={(e) => setPassword(e.target.value)}/>
                                     </div>
                                     <div className="input-group input-group-outline mb-3">
                                         <label className="form-label">Password Confirmation</label>
-                                        <input type="password" className="form-control" value={password_confirmation}
+                                        <input disabled={loading} type="password" className="form-control"
+                                               value={password_confirmation}
                                                onChange={(e) => setPasswordConfirmation(e.target.value)}/>
                                     </div>
+                                    {loading && (
+                                        <div className="container mx-auto text-center p-lg-4">
+                                            <BeatLoader
+                                                color={"#E53371"}
+                                                loading={loading}
+                                                cssOverride={override}
+                                                size={10}
+                                                aria-label="Loading Spinner"
+                                                data-testid="loader"/>
 
-                                    <div className="text-center">
-                                        <button type="submit" className="btn bg-gradient-primary w-100 my-4 mb-2">Sign
-                                            Up
-                                        </button>
-                                    </div>
-                                    <a href={'/login'}>
-                                        <p className="mt-4 text-sm text-center">
-                                            Already have an account? Sign In
-                                        </p>
-                                    </a>
+                                        </div>
+
+                                    )}
+                                    {!loading && (
+                                        <>
+                                            <div className="text-center">
+                                                <button type="submit"
+                                                        className="btn bg-gradient-primary w-100 my-4 mb-2">Sign
+                                                    Up
+                                                </button>
+                                            </div>
+                                            <a href={'/login'}>
+                                                <p className="mt-4 text-sm text-center">
+                                                    Already have an account? Sign In
+                                                </p>
+                                            </a>
+                                        </>
+                                    )}
 
                                 </form>
                             </div>

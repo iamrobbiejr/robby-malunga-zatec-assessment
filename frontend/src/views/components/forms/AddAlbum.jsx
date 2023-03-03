@@ -1,9 +1,16 @@
-import React, {useState, CSSProperties} from 'react';
+import React, {useState} from 'react';
 import SlidingPane from "react-sliding-pane";
 import axiosClient from "../../../axios.jsx";
 import {BeatLoader} from "react-spinners";
 import {css} from "@emotion/react";
 import {useStateContext} from "../../contexts/ContextProvider.jsx";
+import ToastService from 'react-material-toast';
+
+const toast = ToastService.new({
+    place: 'topRight',
+    duration: 2,
+    maxCount: 8
+});
 
 const override = css`
     display: block;
@@ -54,12 +61,17 @@ function AddAlbum({visible, closePane, closeAfterSuccessPane}) {
         axiosClient.post("/album", payload)
             .then(res => {
                 console.log(res)
-
+                toast.success('Album Created Successfully', () => {
+                    console.log('closed')
+                })
                 closeAfterSuccessPane()
                 setLoading(false)
             })
             .catch(err => {
                 console.log(err)
+                toast.error('Operation Failed,Please try again', () => {
+                    console.log('closed')
+                })
                 setLoading(false)
             })
 
@@ -108,23 +120,21 @@ function AddAlbum({visible, closePane, closeAfterSuccessPane}) {
                                                 Cover</h2>
                                         )}
                                         {request.cover_image_url && (
-                                            <img
-                                                src={request.cover_image_url}
-                                                alt="..." width="700px" height="350px"/>
+                                            <img name="cover_image"
+                                                 src={request.cover_image_url}
+                                                 alt="..." width="700px" height="350px"/>
                                         )}
 
                                     </div>
                                     <div className="fileinput-preview fileinput-exists thumbnail img-raised"></div>
 
                                     <div>
-                                <span className="btn btn-raised btn-round btn-sm btn-file">
-                                    <input type="file" name="..." className="btn btn-sm btn-dark p-2"
+                                <span name="btn_file" id="btn_file"
+                                      className="btn btn-raised btn-round btn-sm btn-file">
+                                    <input id="file" type="file" name="file" className="btn btn-sm btn-dark p-2"
                                            onChange={onImageChoose} accept="image/png, image/gif, image/jpeg"/>
                                 </span>
-                                        {/*<span className="btn btn-raised btn-round btn-sm btn-file">*/}
-                                        {/*    <a href="#pablo" className="btn btn-danger btn-round fileinput-exists" data-dismiss="fileinput">*/}
-                                        {/*    <i className="fa fa-times"></i> Remove</a>*/}
-                                        {/*</span>*/}
+
 
                                     </div>
                                 </div>
@@ -135,7 +145,7 @@ function AddAlbum({visible, closePane, closeAfterSuccessPane}) {
 
                         <div className="input-group input-group-static mb-4 mt-4">
                             <label>Album Title</label>
-                            <input type="text" className="form-control"
+                            <input id="album_title" type="text" name="album_title" className="form-control"
                                    value={request.title}
                                    onChange={(ev) =>
                                        setRequest({...request, title: ev.target.value})
@@ -144,14 +154,16 @@ function AddAlbum({visible, closePane, closeAfterSuccessPane}) {
                         </div>
                         <div className="input-group input-group-static mb-4">
                             <label>Description</label>
-                            <input type="text" className="form-control" value={request.description}
+                            <input id="description" name="description" type="text" className="form-control"
+                                   value={request.description}
                                    onChange={(ev) =>
                                        setRequest({...request, description: ev.target.value})
                                    }/>
                         </div>
                         <div className="input-group input-group-static my-3">
                             <label>Release Date</label>
-                            <input type="date" className="form-control" value={request.release_date}
+                            <input id="releaseDate" name="releaseDate" type="date" className="form-control"
+                                   value={request.release_date}
                                    onChange={(ev) =>
                                        setRequest({...request, release_date: ev.target.value})
                                    }/>
