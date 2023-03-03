@@ -36,7 +36,7 @@ describe('manage album & songs', () => {
         cy.wait(3000);
         cy.findByRole('button', {name: /add new song/i}).click()
         cy.wait(2000);
-        cy.findByRole('heading', {name: /manage album/i}).click({force: true})
+        cy.get('body > div:nth-child(20) > div').click({force: true})
         // cy.findByRole('combobox', {name: /select genre/i}).select('3')
         // cy.findByRole('dialog', {
         //      name: /modal "create new album"/i
