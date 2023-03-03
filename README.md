@@ -10,7 +10,7 @@ Project was created using Laravel & ReactJS
 
 - Composer
 - NodeJS v16 and above
-- Xampp / Wampp - Any local server that can allow you to serve php projects
+- Xampp / Wamp - Any local server that can allow you to serve php projects
 
 ## Setting Up
 
