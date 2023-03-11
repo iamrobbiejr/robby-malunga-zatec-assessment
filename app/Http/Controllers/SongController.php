@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\SongStoreRequest;
 use App\Http\Requests\SongUpdateRequest;
+use App\Http\Resources\SongCollection;
+use App\Http\Resources\SongResource;
 use App\Models\Album;
 use App\Models\Song;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Illuminate\Support\Facades\Log;
 
 class SongController extends Controller
@@ -17,12 +20,8 @@ class SongController extends Controller
     public function index()
     {
         // retrieve all songs
-        $songs = Song::all();
 
-        return response()->json([
-            'message' => 'All songs',
-            'data' => $songs
-        ]);
+        return response()->json(new SongCollection(Song::paginate(10)), ResponseAlias::HTTP_OK);
     }
 
     /**
@@ -33,10 +32,7 @@ class SongController extends Controller
         // retrieve all songs owned by an album
         $songs = Song::where('album_id', $album->id)->get();
 
-        return response()->json([
-            'message' => 'All songs',
-            'data' => $songs
-        ]);
+        return response()->json(new SongCollection($songs), ResponseAlias::HTTP_OK);
     }
 
     /**
@@ -47,10 +43,7 @@ class SongController extends Controller
         // retrieve all songs by selected genre
         $songs = Song::where('genre', $request->genre)->get();
 
-        return response()->json([
-            'message' => 'All songs',
-            'data' => $songs
-        ]);
+        return response()->json(new SongCollection($songs), ResponseAlias::HTTP_OK);
     }
 
 
@@ -62,11 +55,12 @@ class SongController extends Controller
         $data = $request->validated();
 
         try {
-            Song::create($data);
+            $song = Song::create($data);
 
             return response()->json([
                 'message' => 'Song Created Successfully!!'
-            ]);
+            ],
+                ResponseAlias::HTTP_CREATED);
         } catch (\Exception $e) {
 
             Log::error($e->getMessage());
@@ -82,7 +76,7 @@ class SongController extends Controller
      */
     public function show(Song $song)
     {
-        return $song;
+        return new SongResource($song);
     }
 
 
@@ -97,9 +91,7 @@ class SongController extends Controller
 
             $song->fill($data)->update();
 
-            return response()->json([
-                'message' => 'Song Updated Successfully!!'
-            ]);
+            return response()->json(new SongResource($song), ResponseAlias::HTTP_OK);
 
         } catch (\Exception $e) {
             Log::error($e->getMessage());
@@ -119,7 +111,8 @@ class SongController extends Controller
             $song->delete();
             return response()->json([
                 'message' => 'Song Deleted Successfully!!'
-            ]);
+            ], ResponseAlias::HTTP_NO_CONTENT);
+
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             return response()->json([

@@ -25,7 +25,7 @@ class AlbumController extends Controller
     public function index()
     {
         // retrieve all albums
-        $albums = Album::all();
+        $albums = Album::paginate(9);
 
         foreach ($albums as $album) {
             $songs = Song::where('album_id', $album->id)->get();
