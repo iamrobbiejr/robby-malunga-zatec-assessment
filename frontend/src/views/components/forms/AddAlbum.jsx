@@ -63,6 +63,12 @@ function AddAlbum({visible, closePane, closeAfterSuccessPane}) {
                 console.log(res)
                 toast.success('Album Created Successfully', () => {
                     console.log('closed')
+                    setRequest({
+                        title: "",
+                        description: "",
+                        cover_image_url: null,
+                        release_date: "",
+                    })
                 })
                 closeAfterSuccessPane()
                 setLoading(false)

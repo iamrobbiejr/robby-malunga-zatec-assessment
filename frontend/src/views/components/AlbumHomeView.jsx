@@ -11,20 +11,30 @@ function AlbumHomeView(props) {
         }
     })
     const [albums, setAlbums] = useState([]);
+    const [data, setData] = useState();
 
     const handleOnPaneClose = () => {
         setDetailsPane({visible: false, data: {title: '', description: '', release_date: '', songs: []}})
     }
 
-    useEffect(() => {
 
-        axiosClient.get('/albums')
+    useEffect(() => {
+        axiosClient.get('/albums?page=' + 1)
             .then(res => {
-                console.log("albums: ", res)
-                setAlbums(res.data.data)
+                console.log("home albums: ", res.data.data)
+                if (res.data.data.data.length === 0) {
+                    setAlbums([])
+                    setData([])
+                } else {
+                    setAlbums(res.data.data.data)
+                    setData(res.data.data)
+                }
+
             })
             .catch(err => {
                 console.log(err)
+                setAlbums([])
+                setData([])
             })
 
     }, [])
@@ -62,7 +72,28 @@ function AlbumHomeView(props) {
                         </div>
                     </div>
                 ))}
-
+                <div className="row container mt-4">
+                    <nav aria-label="Page navigation example">
+                        <ul className="pagination justify-content-center">
+                            <li className="page-item disabled">
+                                <a className="page-link" href="javascript:;" tabIndex="-1">
+                                    <i className="fa fa-angle-left"></i>
+                                    <span className="sr-only">Previous</span>
+                                </a>
+                            </li>
+                            <li className="page-item"><a className="page-link" href="javascript:;">1</a></li>
+                            <li className="page-item active"><a className="page-link text-white"
+                                                                href="javascript:;">2</a></li>
+                            <li className="page-item"><a className="page-link" href="javascript:;">3</a></li>
+                            <li className="page-item">
+                                <a className="page-link" href="javascript:;">
+                                    <i className="fa fa-angle-right"></i>
+                                    <span className="sr-only">Next</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
             </div>
 
         </>

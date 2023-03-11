@@ -45,6 +45,11 @@ function AddSong({visible, album, closePane, closeAfterSuccessPane}) {
                 console.log(res)
                 toast.success('Song successfully added to album', () => {
                     console.log('closed')
+                    setRequest({
+                        title: "",
+                        genre: "",
+                        length: "",
+                    })
                 })
                 closeAfterSuccessPane()
                 setAddLoading(false)
