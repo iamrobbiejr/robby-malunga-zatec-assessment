@@ -20,8 +20,9 @@ class SongController extends Controller
     public function index()
     {
         // retrieve all songs
+        $songs = Song::paginate(10);
 
-        return response()->json(new SongCollection(Song::paginate(10)), ResponseAlias::HTTP_OK);
+        return SongResource::collection($songs)->response()->getData(true);
     }
 
     /**

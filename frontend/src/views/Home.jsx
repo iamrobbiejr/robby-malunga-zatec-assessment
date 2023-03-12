@@ -9,11 +9,43 @@ import AlbumHomeView from "./components/AlbumHomeView.jsx";
 import GenreHomeView from "./components/GenreHomeView.jsx";
 import SongsHomeView from "./components/SongsHomeView.jsx";
 import axiosClient from "../axios.jsx";
+import {BeatLoader} from "react-spinners";
+import {css} from "@emotion/react";
 
+
+const override = css`
+    display: block;
+    margin: 0 auto;
+`;
 
 function Home(props) {
 
     const {currentUser, userToken, setUserToken, setCurrentUser} = useStateContext();
+
+    const [albums, setAlbums] = useState({data: [], links: []});
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        setLoading(true)
+        //get initial albums
+        axiosClient.get('/albums')
+            .then(res => {
+                if (res.data.data.data.length === 0) {
+                    setAlbums({data: []})
+                    setLoading(false)
+                } else {
+                    setAlbums(res.data.data)
+                    setLoading(false)
+                }
+
+            })
+            .catch(err => {
+                console.log(err)
+                setAlbums({data: []})
+                setLoading(false)
+            })
+
+    }, [])
 
 
     return (
@@ -79,7 +111,24 @@ function Home(props) {
                                             <h2 className=" p-3 mt-2">Albums</h2>
                                         </div>
                                         {/*    albums section */}
-                                        <AlbumHomeView/>
+                                        {loading && (
+                                            <div className="container ml-lg-8 p-lg-4">
+                                                <BeatLoader
+                                                    color={"#E53371"}
+                                                    loading={loading}
+                                                    cssOverride={override}
+                                                    size={30}
+                                                    aria-label="Loading Spinner"
+                                                    data-testid="loader"/>
+
+                                            </div>
+
+                                        )}
+                                        {!loading && (
+                                            <>
+                                                <AlbumHomeView albums={albums}/>
+                                            </>
+                                        )}
                                         {/*   end albums section */}
                                     </>
                                 </div>
